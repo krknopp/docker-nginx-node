@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Add gitlab to hosts file
+grep -q -F "$GIT_HOSTS" /etc/hosts  || echo $GIT_HOSTS >> /etc/hosts
+
+# Clone repo to container
+git clone -b $GIT_BRANCH $GIT_REPO /usr/share/nginx/html/
+
+#start cron in the background
+/usr/sbin/cron -f &
+
+# Start Apache server
+nginx -g daemon off;
+
