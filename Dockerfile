@@ -30,6 +30,7 @@ RUN rm -Rf /usr/share/nginx/html/*
 ADD nginx-start /nginx-start
 ADD ssmtp.conf /etc/ssmtp/ssmtp.conf
 ADD crons.conf /root/crons.conf
+ADD default.conf /etc/nginx/conf.d/default.conf
 
 #Add cron job
 RUN crontab /root/crons.conf
