@@ -10,5 +10,5 @@ git clone -b $GIT_BRANCH $GIT_REPO /usr/share/nginx/html/
 /usr/sbin/cron -f &
 
 # Start Apache server
-nginx -g daemon off;
+nginx -g "daemon off;"
 
