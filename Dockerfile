@@ -18,6 +18,7 @@ RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC64107
 						gettext-base \
 						cron \
 						git \
+						ssmtp \
 	&& rm -rf /var/lib/apt/lists/*
 
 # forward request and error logs to docker log collector
@@ -27,6 +28,11 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 RUN rm -Rf /usr/share/nginx/html/*
 
 ADD nginx-start /nginx-start
+ADD ssmtp.conf /etc/ssmtp/ssmtp.conf
+ADD crons.conf /root/crons.conf
+
+#Add cron job
+RUN crontab /root/crons.conf
 
 EXPOSE 80
 
