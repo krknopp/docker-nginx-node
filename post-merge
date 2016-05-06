@@ -13,3 +13,5 @@ check_run() {
 # In this example it's used to run `npm install` if package.json changed and `bower install` if `bower.json` changed.
 check_run package.json "npm install"
 check_run bower.json "bower install"
+
+npm run build
