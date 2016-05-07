@@ -7,7 +7,7 @@ grep -q -F "$GIT_HOSTS" /etc/hosts  || echo $GIT_HOSTS >> /etc/hosts
 git clone -b $GIT_BRANCH $GIT_REPO /usr/share/nginx/html/
 
 # Copy in post-merge script to run npm install
-cat post-merge >> /usr/share/nginx/html/.git/hooks/post-merge
+cat /post-merge >> /usr/share/nginx/html/.git/hooks/post-merge
 chmod +x /usr/share/nginx/html/.git/hooks/post-merge
 
 # run node prep commands
