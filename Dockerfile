@@ -28,7 +28,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 RUN mkdir -p /var/www/site
 
 # install npm stuff
-RUN npm install -g bower gulp-cli
+RUN npm install -g bower gulp-cli webpack
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 WORKDIR /var/www/site
