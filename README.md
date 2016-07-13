@@ -5,6 +5,7 @@ Custom Nginx Container
 GIT_REPO - Git HTTPS URL  
 GIT_BRANCH - Git branch
 GIT_HOSTS - HOSTS file entry, if needed
+NODE_PREP - Required command to tell node to build html
 
 **Amazon SES Information (used by ssmtp)**  
 SESmailhub - SMTP Server  

@@ -4,14 +4,14 @@
 grep -q -F "$GIT_HOSTS" /etc/hosts  || echo $GIT_HOSTS >> /etc/hosts
 
 # Clone repo to container
-git clone -b $GIT_BRANCH $GIT_REPO /usr/share/nginx/html/
+git clone -b $GIT_BRANCH $GIT_REPO /var/www/site/
 
 # Copy in post-merge script to run npm install
-cat /post-merge >> /usr/share/nginx/html/.git/hooks/post-merge
-chmod +x /usr/share/nginx/html/.git/hooks/post-merge
+cat /root/post-merge >> /var/www/site/.git/hooks/post-merge
+chmod +x /var/www/site/.git/hooks/post-merge
 
 # run node prep commands
-cd /usr/share/nginx/html/ && eval ${NODE_PREP}
+cd /var/www/site/ && eval ${NODE_PREP}
 
 #start cron in the background
 /usr/sbin/cron -f &
