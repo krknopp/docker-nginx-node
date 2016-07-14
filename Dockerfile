@@ -6,14 +6,9 @@ RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC64107
 	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						ca-certificates \
-						nginx \
+						nginx ssmtp cron supervisor \
 						gettext-base \
-						cron \
-						git \
-						ssmtp \
-						ssh \
-						vim \
-						curl \
+						vim curl ssh git \
 	&& curl -sL https://deb.nodesource.com/setup_4.x | bash - \
 	&& apt-get install --yes nodejs \
 	&& rm -rf /var/lib/apt/lists/*
@@ -27,19 +22,27 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 
 RUN mkdir -p /var/www/site
 
-# install npm stuff
+# Install npm stuff
 RUN npm install -g bower gulp-cli webpack
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
+# Install Confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+
 WORKDIR /var/www/site
 
-ADD ssmtp.conf /etc/ssmtp/ssmtp.conf
-ADD start.sh crons.conf post-merge /root/
-ADD default.conf /etc/nginx/sites-enabled/default
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY confd /etc/confd
+COPY start.sh crons.conf post-merge /root/
+COPY default.conf /etc/nginx/sites-enabled/default
 
-#Add cron job
+# Add cron job
 RUN crontab /root/crons.conf
+
+# Volumes
+VOLUME /var/www/site
 
 EXPOSE 80
 
-CMD ["/root/start.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
