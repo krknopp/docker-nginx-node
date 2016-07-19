@@ -4,7 +4,7 @@ MAINTAINER NGINX Docker Maintainers "docker-maint@nginx.com"
 
 RUN  apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
-						ca-certificates \
+						ca-certificates bzip2 \
 						nginx ssmtp cron supervisor \
 						gettext-base \
 						vim curl ssh git \
