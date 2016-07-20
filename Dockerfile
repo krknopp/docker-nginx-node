@@ -6,7 +6,7 @@ RUN  apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						ca-certificates bzip2 \
 						nginx ssmtp cron supervisor \
-						gettext-base \
+						gettext-base libelf1 \
 						vim curl ssh git \
 	&& curl -sL https://deb.nodesource.com/setup_4.x | bash - \
 	&& apt-get install --yes nodejs \
