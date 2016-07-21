@@ -15,3 +15,6 @@ chmod +x /var/www/site/.git/hooks/post-merge
 
 # run node prep commands
 cd /var/www/site/ && eval ${NODE_PREP}
+
+# Add in .htpasswd if ENV VAR set
+if [ $HTPASSWD ]; then echo $HTPASSWD > /var/www/site/.htpasswd ; fi
