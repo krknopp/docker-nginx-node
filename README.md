@@ -6,6 +6,7 @@ GIT_REPO - Git HTTPS URL
 GIT_BRANCH - Git branch  
 GIT_HOSTS - HOSTS file entry, if needed  
 NODE_PREP - Required command to tell node to build html  
+HTPASSWD - populated if site should be protected by htpasswd file
 
 **Amazon SES Information (used by ssmtp)**  
 SESmailhub - SMTP Server  
