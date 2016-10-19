@@ -13,7 +13,7 @@ RUN  apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV NPM_CONFIG_LOGLEVEL warn
-ENV NODE_VERSION 4.3.2
+ENV NODE_VERSION 4.4.7
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
