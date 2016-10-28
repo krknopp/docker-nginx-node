@@ -8,12 +8,12 @@ RUN  apt-get update \
 						nginx ssmtp cron supervisor \
 						gettext-base libelf1 \
 						vim curl ssh git \
-	&& curl -sL https://deb.nodesource.com/setup_4.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_6.x | bash - \
 	&& apt-get install --yes nodejs \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV NPM_CONFIG_LOGLEVEL warn
-ENV NODE_VERSION 4.4.7
+ENV NODE_VERSION 6.9.1
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
