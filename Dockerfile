@@ -1,47 +1,39 @@
-FROM ubuntu:16.04
+FROM node:6
 
-MAINTAINER NGINX Docker Maintainers "docker-maint@nginx.com"
+ENV NGINX_VERSION 1.11.12-1~jessie
 
-RUN  apt-get update \
+RUN set -e; \
+	NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
+	found=''; \
+	for server in \
+		ha.pool.sks-keyservers.net \
+		hkp://keyserver.ubuntu.com:80 \
+		hkp://p80.pool.sks-keyservers.net:80 \
+		pgp.mit.edu \
+	; do \
+		echo "Fetching GPG key $NGINX_GPGKEY from $server"; \
+		apt-key adv --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$NGINX_GPGKEY" && found=yes && break; \
+	done; \
+	test -z "$found" && echo >&2 "error: failed to fetch GPG key $NGINX_GPGKEY" && exit 1; \
+	exit 0
+
+RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list \
+	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
-						ca-certificates bzip2 \
-						nginx ssmtp cron supervisor \
-						gettext-base libelf1 \
-						vim curl ssh git \
-	&& curl -sL https://deb.nodesource.com/setup_4.x | bash - \
-	&& apt-get install --yes nodejs \
+						ca-certificates \
+						nginx=${NGINX_VERSION} \
+						nginx-module-xslt \
+						nginx-module-geoip \
+						nginx-module-image-filter \
+						nginx-module-perl \
+						nginx-module-njs \
+						gettext-base \
 	&& rm -rf /var/lib/apt/lists/*
-
-ENV NPM_CONFIG_LOGLEVEL warn
-ENV NODE_VERSION 4.4.7
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN mkdir -p /var/www/site
+EXPOSE 80 443
 
-# Install npm stuff
-RUN npm install -g bower gulp-cli webpack
-RUN echo '{ "allow_root": true }' > /root/.bowerrc
-
-# Install Confd
-ADD https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 /usr/local/bin/confd
-RUN chmod +x /usr/local/bin/confd
-
-WORKDIR /var/www/site
-
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY confd /etc/confd
-COPY start.sh crons.conf post-merge /root/
-COPY default.conf /etc/nginx/sites-enabled/default
-
-# Add cron job
-RUN crontab /root/crons.conf
-
-# Volumes
-VOLUME /var/www/site
-
-EXPOSE 80
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["nginx", "-g", "daemon off;"]
