@@ -2,7 +2,6 @@ FROM ubuntu:16.04
 
 MAINTAINER NGINX Docker Maintainers "docker-maint@nginx.com"
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
 RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	&& apt-get update \
@@ -12,6 +11,8 @@ RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 						gettext-base libelf1 \
 						vim curl ssh git nodejs yarn \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && apt-get update && apt-get install yarn && rm -rf /var/lib/apt/lists/*
 
 ENV NPM_CONFIG_LOGLEVEL warn
 ENV NODE_VERSION 8.2.1
