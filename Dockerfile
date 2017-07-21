@@ -2,18 +2,19 @@ FROM ubuntu:16.04
 
 MAINTAINER NGINX Docker Maintainers "docker-maint@nginx.com"
 
-RUN  apt-get update \
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						ca-certificates bzip2 \
 						nginx ssmtp cron supervisor \
 						gettext-base libelf1 \
-						vim curl ssh git \
-	&& curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-	&& apt-get install --yes nodejs \
+						vim curl ssh git nodejs yarn \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV NPM_CONFIG_LOGLEVEL warn
-ENV NODE_VERSION 6.9.1
+ENV NODE_VERSION 8.2.1
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
