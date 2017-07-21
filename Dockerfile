@@ -3,13 +3,14 @@ FROM ubuntu:16.04
 MAINTAINER NGINX Docker Maintainers "docker-maint@nginx.com"
 
 
-RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-	&& apt-get update \
+RUN apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						ca-certificates bzip2 apt-transport-https \
 						nginx ssmtp cron supervisor \
 						gettext-base libelf1 \
 						vim curl ssh git nodejs \
+	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+	&& apt-get install -y nodejs \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && apt-get update && apt-get install yarn && rm -rf /var/lib/apt/lists/*
@@ -24,7 +25,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 RUN mkdir -p /var/www/site
 
 # Install npm stuff
-RUN npm install -g bower gulp-cli webpack
+RUN /usr/bin/npm install -g bower gulp-cli webpack
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 # Install Confd
